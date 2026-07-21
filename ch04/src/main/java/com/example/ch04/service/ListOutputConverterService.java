@@ -48,8 +48,18 @@ public class ListOutputConverterService {
 		return answerList;
 	}
 	
-	public List<String> convertHighLevel() {		
-		return null;
+	public List<String> convertHighLevel(String city) {	
+		
+		List<String> answerList = chatClient.prompt()
+											.user("%s에서 유명한 호텔 목록 5개 출력하시오.".formatted(city))
+											.call()
+											.entity(new ListOutputConverter());		
+				
+		return answerList;
 	}
 
 }
+
+
+
+

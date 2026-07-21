@@ -29,7 +29,8 @@ public class ListOutputConverterController {
 	@PostMapping("/ai/list-output-converter")
 	public List<String> listOutputConverter(@RequestParam("city") String city) {
 		
-		List<String> answerList = service.convertLowLevel(city);
+		//List<String> answerList = service.convertLowLevel(city);
+		List<String> answerList = service.convertHighLevel(city);
 		
 		
 		return answerList;
