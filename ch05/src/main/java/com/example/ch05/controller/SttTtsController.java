@@ -38,7 +38,12 @@ public class SttTtsController {
 		return text;
 	}
 	
-	
+	@ResponseBody
+	@PostMapping("/ai/tts")
+	public byte[] tts(@RequestParam("text") String text) throws IOException {					
+		byte[] bytes = service.tts(text);				
+		return bytes;
+	}
 	
 	
 	

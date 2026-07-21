@@ -2,13 +2,20 @@ package com.example.ch05.service;
 
 import org.springframework.ai.audio.transcription.AudioTranscriptionPrompt;
 import org.springframework.ai.audio.transcription.AudioTranscriptionResponse;
+import org.springframework.ai.audio.tts.TextToSpeechPrompt;
+import org.springframework.ai.audio.tts.TextToSpeechResponse;
 import org.springframework.ai.chat.client.ChatClient;
 import org.springframework.ai.openai.OpenAiAudioSpeechModel;
+import org.springframework.ai.openai.OpenAiAudioSpeechOptions;
 import org.springframework.ai.openai.OpenAiAudioTranscriptionModel;
 import org.springframework.ai.openai.OpenAiAudioTranscriptionOptions;
 import org.springframework.core.io.ByteArrayResource;
 import org.springframework.core.io.Resource;
 import org.springframework.stereotype.Service;
+
+import com.openai.models.audio.AudioResponseFormat;
+
+
 import lombok.extern.log4j.Log4j2;
 
 @Log4j2
@@ -58,7 +65,30 @@ public class SttTtsService {
 	
 	public byte[] tts(String text) {	
 		
-		return null;
+		// 모델 옵션 설정
+		OpenAiAudioSpeechOptions options = OpenAiAudioSpeechOptions.builder()
+				.model("gpt-4o-mini-tts")
+				.voice(OpenAiAudioSpeechOptions.Voice.ALLOY)
+				.responseFormat(OpenAiAudioSpeechOptions.AudioResponseFormat.MP3)
+				.speed(1.0)
+				.build();
+		
+		// 프롬프트 생성
+		TextToSpeechPrompt prompt = new TextToSpeechPrompt(text, options);
+		
+		// 모델 요청 및 응답
+		TextToSpeechResponse response = openAiAudioSpeechModel.call(prompt);
+		byte[] bytes = response.getResult().getOutput();
+				
+		return bytes;
 	}
 
 }
+
+
+
+
+
+
+
+
