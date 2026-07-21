@@ -36,8 +36,7 @@ public class SystemMessageService {
 					영화 리뷰를 [POSITIVE, NEUTRAL, NEGATIVE] 중에서 하나로 분류하고,
 					유효한 JSON을 반환하시오.
 					""")
-			.user("%s".formatted(review))
-			//.options(ChatOptions.builder().temperature(0.0).build())
+			.user("%s".formatted(review))			
 			.call()
 			.entity(ReviewClassification.class);
 		
