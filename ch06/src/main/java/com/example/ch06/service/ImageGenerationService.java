@@ -134,13 +134,15 @@ public class ImageGenerationService {
 	
 		
 	
-	  public record OpenAIImageEditResponse(List<Image> data) {
+	
+	
+	public record OpenAIImageEditResponse(List<Image> data) {
 	    
-	    public record Image(
+		public record Image(
 	        String url,
 	        String b64_json) {
 	    }
-	  }
+	}
 	
 
 }
