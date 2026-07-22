@@ -30,6 +30,13 @@ public class AdvisorA implements CallAdvisor, StreamAdvisor {
 		
 		log.info("[전처리]");
 		
+		
+		
+		
+		
+		
+		
+		
 		Flux<ChatClientResponse> response = streamAdvisorChain.nextStream(chatClientRequest);
 		
 		log.info("[후처리]");
@@ -42,7 +49,10 @@ public class AdvisorA implements CallAdvisor, StreamAdvisor {
 		
 		log.info("[전처리]");
 		
+		
+		// LLM 모델 요청
 		ChatClientResponse response = callAdvisorChain.nextCall(chatClientRequest);
+				
 		
 		log.info("[후처리]");
 		
