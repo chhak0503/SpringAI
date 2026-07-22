@@ -9,10 +9,7 @@ import org.springframework.ai.image.ImageModel;
 import org.springframework.core.io.ByteArrayResource;
 import org.springframework.stereotype.Service;
 import org.springframework.util.MimeType;
-
 import reactor.core.publisher.Flux;
-
-
 
 @Service
 public class ImageAnalysisService {
@@ -29,11 +26,11 @@ public class ImageAnalysisService {
 		
 		// 시스템 메세지 작성
 		SystemMessage systemMessage = SystemMessage.builder()
-				.text("""
-					당신은 이미지 분석 전문가입니다.
-					사용자 질문에 맞게 이미지를 분석하고 답변하시오.						
-					""")
-				.build();
+			.text("""
+				당신은 이미지 분석 전문가입니다.
+				사용자 질문에 맞게 이미지를 분석하고 답변하시오.						
+				""")
+			.build();
 		
 		// 미디어 생성
 		Media media = Media.builder()
