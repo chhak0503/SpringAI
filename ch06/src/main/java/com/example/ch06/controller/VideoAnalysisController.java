@@ -26,7 +26,7 @@ public class VideoAnalysisController {
 		
 		
 	@GetMapping("/ai/video-analysis")
-	public String imageGeneration() {
+	public String videoAnalysis() {
 		return "/video-analysis";
 	}
 	

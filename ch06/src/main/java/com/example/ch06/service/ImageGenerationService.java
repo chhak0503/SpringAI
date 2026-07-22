@@ -103,6 +103,7 @@ public class ImageGenerationService {
 		form.add("size", "1024x1024");
 		form.add("quality", "low");
 		
+		// Spring AI는 아직 이미지 수정 API가 없기 때문에 직접 OpenAI 이미지 편집 요청을 해야됨
 		// REST API 요청을 위한 WebClient 생성
 		WebClient webClient = WebClient.builder()
 				.baseUrl("https://api.openai.com/v1/images/edits")
