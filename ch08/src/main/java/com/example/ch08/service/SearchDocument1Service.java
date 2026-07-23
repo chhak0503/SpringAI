@@ -32,9 +32,9 @@ public class SearchDocument1Service {
 		List<Document> documentList = vectorStore.similaritySearch(
 											SearchRequest.builder()
 												.query(question)
-												.topK(3)
-												.similarityThreshold(0.5)
-												.filterExpression("source == '헌법' && year >= 1987")
+												.topK(1)
+												.similarityThreshold(0.4)
+												//.filterExpression("source == '헌법' && year >= 1987")
 												.build()				
 											);				
 		

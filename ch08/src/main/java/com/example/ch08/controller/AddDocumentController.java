@@ -28,8 +28,8 @@ public class AddDocumentController {
 	@PostMapping("/ai/add-document")
 	public String addDocument(@RequestParam("question") String question) {
 		
-		service.addDocument();
-		
+		//service.addDocument();
+		service.addDocumentShopping();
 		return "벡터 저장소를 확인하세요.";
 	}
 	
