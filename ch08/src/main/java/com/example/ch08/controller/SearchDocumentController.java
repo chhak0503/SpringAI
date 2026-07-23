@@ -19,7 +19,7 @@ import lombok.extern.log4j.Log4j2;
 @Log4j2
 @RequiredArgsConstructor
 @Controller
-public class SearchDocument1Controller {
+public class SearchDocumentController {
 	
 	private final SearchDocument1Service service;
 	
@@ -32,7 +32,7 @@ public class SearchDocument1Controller {
 	@PostMapping("/ai/search-document-1")
 	public String searchDocument1(@RequestParam("question") String question) {
 		
-		List<Document> documentList = service.searchDocument(question);
+		List<Document> documentList = service.search(question);
 		
 		String text = "";
 		

@@ -26,9 +26,13 @@ public class SearchDocument1Service {
 	private final VectorStore vectorStore;
 	
 	
-	public List<Document> searchDocument(String question) {
+	public List<Document> search(String question) {
+	
+		// 유사도 검색(일반적인 유사도가 높은 상위 4개 조회)
+		List<Document> documentList = vectorStore.similaritySearch(question);
 		
-		// 유사도 검색
+		// 유사도 검색(세밀하게 할 경우)
+		/*
 		List<Document> documentList = vectorStore.similaritySearch(
 											SearchRequest.builder()
 												.query(question)
@@ -37,7 +41,7 @@ public class SearchDocument1Service {
 												//.filterExpression("source == '헌법' && year >= 1987")
 												.build()				
 											);				
-		
+		*/
 		return documentList;
 	}
 	
