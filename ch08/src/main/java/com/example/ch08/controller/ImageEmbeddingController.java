@@ -41,6 +41,14 @@ public class ImageEmbeddingController {
 		return "얼굴을 저장했습니다.";
 	}
 	
+	@ResponseBody
+	@PostMapping("/ai/find-face")
+	public String findFace(@RequestParam("attach") MultipartFile attach) throws IOException {		
+		String personName = service.findFace(attach);
+		
+		return personName;
+	}
+	
 
 }
 

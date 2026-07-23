@@ -3,6 +3,7 @@ package com.example.ch08.service;
 import java.io.IOException;
 import java.util.Arrays;
 import java.util.List;
+import java.util.Map;
 
 import org.springframework.ai.embedding.Embedding;
 import org.springframework.ai.embedding.EmbeddingModel;
@@ -67,13 +68,43 @@ public class ImageEmbeddingService {
 		jdbcTemplate.update(sql, personName, strVector);		
 	}
 	
-	
-	
-	public record FaceEmbeddingResponse(float[] vector) {		
+	public String findFace(MultipartFile mfile) throws IOException {
 		
+		float[] vector = getFaceVector(mfile);
+		String strVector = Arrays.toString(vector).replace(" ", "");
+		
+		String sql = """
+				SELECT content, (embedding <=> ?::vector) AS similarity
+				FROM face_vector_store
+				ORDER BY embedding <=> ?::vector
+				LIMIT 3				
+				""";
+		
+		List<Map<String, Object>> list = jdbcTemplate.queryForList(sql, strVector, strVector);
+		
+		for(Map<String, Object> map : list) {
+			
+			String personName = (String) map.get("content");
+			Double similarity = (Double) map.get("similarity");
+			
+			log.info("{} 코사인 거리: {}", personName, similarity);			
+		}
+		
+		// 검색 결과에서 거리가 가장 짧은 벡터의 유사도가 0.3 이상일 경우
+		double similarity = (double) list.get(0).get("similarity");
+		String personName = (String) list.get(0).get("content");
+		
+		if(similarity > 0.6) {
+			return "등록된 사람이 아닙니다.";
+		}
+		
+		return personName;
 	}
 	
 	
+	
+	
+	public record FaceEmbeddingResponse(float[] vector) {}
 }
 
 
