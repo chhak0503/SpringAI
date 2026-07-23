@@ -6,6 +6,7 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
 
+import com.example.ch08.service.AddDocumentService;
 import com.example.ch08.service.TextEmbeddingService;
 
 import lombok.RequiredArgsConstructor;
@@ -14,23 +15,24 @@ import lombok.extern.log4j.Log4j2;
 @Log4j2
 @RequiredArgsConstructor
 @Controller
-public class TextEmbeddingController {
+public class AddDocumentController {
 	
-	private final TextEmbeddingService service;
+	private final AddDocumentService service;
 	
-	@GetMapping("/ai/text-embedding")
-	public String textEmbedding() {
-		return "/text-embedding";
+	@GetMapping("/ai/add-document")
+	public String addDocument() {
+		return "/add-document";
 	}
 	
 	@ResponseBody
-	@PostMapping("/ai/text-embedding")
-	public String textEmbedding(@RequestParam("question") String question) {
+	@PostMapping("/ai/add-document")
+	public String addDocument(@RequestParam("question") String question) {
 		
-		service.embedding(question);
+		service.addDocument();
 		
-		return "결과 로그 확인 하세요.";
+		return "벡터 저장소를 확인하세요.";
 	}
+	
 
 }
 
