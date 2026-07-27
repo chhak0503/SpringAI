@@ -35,6 +35,7 @@ public class TxtPdfWordEtlService {
 	// 교재 p305 코딩하기
 	public String etlFromFile(String title, String author, MultipartFile attach) throws IOException {
 
+		// Extract
 		List<Document> documents = extractFromFile(attach);
 
 		if (documents == null) {
@@ -42,6 +43,8 @@ public class TxtPdfWordEtlService {
 		}
 		log.info("추출된 Document 수: {} 개", documents.size());
 
+		
+		// Transform
 		for (Document doc : documents) {
 			Map<String, Object> metadata = doc.getMetadata();
 			metadata.putAll(
@@ -56,6 +59,7 @@ public class TxtPdfWordEtlService {
 		documents = transform(documents);
 		log.info("변환된 Document 수: {} 개", documents.size());
 
+		// Load
 		vectorStore.add(documents);
 
 		return "올린 문서를 추출-변환-적재 완료 했습니다.";
@@ -63,6 +67,7 @@ public class TxtPdfWordEtlService {
 
 	// 교재 p306 코딩하기
 	private List<Document> extractFromFile(MultipartFile attach) throws IOException {
+		
 		Resource resource = new ByteArrayResource(attach.getBytes());
 
 		List<Document> documents = null;
@@ -85,6 +90,7 @@ public class TxtPdfWordEtlService {
 		List<Document> transformedDocuments = null;
 
 		//TokenTextSplitter tokenTextSplitter = new TokenTextSplitter();		
+		
 		TokenTextSplitter tokenTextSplitter = TokenTextSplitter
 												.builder()
 												.build();

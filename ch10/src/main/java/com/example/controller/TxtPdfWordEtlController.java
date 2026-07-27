@@ -1,10 +1,15 @@
 package com.example.controller;
 
+import java.io.IOException;
+
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.multipart.MultipartFile;
+
+import com.example.service.TxtPdfWordEtlService;
 
 import lombok.RequiredArgsConstructor;
 import lombok.extern.log4j.Log4j2;
@@ -14,16 +19,23 @@ import lombok.extern.log4j.Log4j2;
 @Controller
 public class TxtPdfWordEtlController {
 
+	private final TxtPdfWordEtlService service;
+	
+	
 	@GetMapping("/ai/txt-pdf-word-etl")
 	public String txtPdfWordEtl() {		
 		return "/txt-pdf-word-etl";				
 	}
 	
+	@ResponseBody
 	@PostMapping("/ai/txt-pdf-docx-etl")
-	public void txtPdfDocxEtl(@RequestParam("title") String title, 
+	public String txtPdfDocxEtl(@RequestParam("title") String title, 
 							  @RequestParam("author") String author, 
-							  @RequestParam("attach") MultipartFile attach){
+							  @RequestParam("attach") MultipartFile attach) throws IOException{
 		
+		String result = service.etlFromFile(title, author, attach);
+		
+		return result;
 	}
 	
 }
