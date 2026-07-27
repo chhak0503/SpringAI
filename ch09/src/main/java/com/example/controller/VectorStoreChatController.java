@@ -7,6 +7,7 @@ import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
 
 import com.example.service.InMemoryChatService;
+import com.example.service.VectorStoreChatService;
 
 import jakarta.servlet.http.HttpSession;
 import lombok.RequiredArgsConstructor;
@@ -15,18 +16,18 @@ import lombok.extern.log4j.Log4j2;
 @Log4j2
 @RequiredArgsConstructor
 @Controller
-public class InMemoryChatController {
+public class VectorStoreChatController {
 	
-	private final InMemoryChatService service;
+	private final VectorStoreChatService service;
 
-	@GetMapping("/ai/in-memory-chat")
-	public String inMemoryChat() {
-		return "/in-memory-chat";
+	@GetMapping("/ai/vector-store-chat")
+	public String vectorStoreChat() {
+		return "/vector-store-chat";
 	}
 	
 	@ResponseBody
-	@PostMapping("/ai/in-memory-chat")
-	public String inMemoryChat(@RequestParam("question") String question, HttpSession session) {
+	@PostMapping("/ai/vector-store-chat")
+	public String vectorStoreChat(@RequestParam("question") String question, HttpSession session) {
 		
 		String sessionId = session.getId();
 		
