@@ -21,6 +21,7 @@ import org.springframework.ai.vectorstore.filter.FilterExpressionBuilder;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.ai.rag.advisor.RetrievalAugmentationAdvisor;
 import org.springframework.ai.rag.preretrieval.query.transformation.CompressionQueryTransformer;
+import org.springframework.ai.rag.preretrieval.query.transformation.RewriteQueryTransformer;
 import org.springframework.ai.rag.retrieval.search.VectorStoreDocumentRetriever;
 import org.springframework.core.Ordered;
 import org.springframework.core.io.ByteArrayResource;
@@ -34,14 +35,14 @@ import lombok.extern.log4j.Log4j2;
 
 @Log4j2
 @Service
-public class CompressionQueryTransformerService {
+public class RewriteQueryTransformerService {
 	
 	private ChatClient chatClient;	
 	private ChatModel chatModel;
 	private ChatMemory chatMemory;
 	private VectorStore vectorStore;
 	
-	public CompressionQueryTransformerService(ChatClient.Builder chatClientBuilder,
+	public RewriteQueryTransformerService(ChatClient.Builder chatClientBuilder,
 											  ChatModel chatModel,
 											  ChatMemory chatMemory,
 											  VectorStore vectorStore) {
@@ -60,7 +61,7 @@ public class CompressionQueryTransformerService {
 		this.vectorStore = vectorStore;
 	}
 	
-	public CompressionQueryTransformer createCompressionQueryTransformer() {
+	public RewriteQueryTransformer createRewriteQueryTransformer() {
 		
 		ChatClient.Builder chatClientBuilder = ChatClient
 												.builder(chatModel)
@@ -68,14 +69,15 @@ public class CompressionQueryTransformerService {
 													new SimpleLoggerAdvisor(Ordered.LOWEST_PRECEDENCE - 1)
 												);
 		
-		// 압축쿼리변환기 생성
-		CompressionQueryTransformer compressionQueryTransformer = CompressionQueryTransformer
-																		.builder()
-																		.chatClientBuilder(chatClientBuilder)
-																		.build();
+		// 질문 재작성기 생성
+		RewriteQueryTransformer rewriteQueryTransformer = RewriteQueryTransformer
+															.builder()
+															.chatClientBuilder(chatClientBuilder)
+															.build();
 		
-		return compressionQueryTransformer;
+		return rewriteQueryTransformer;
 	}
+	
 	
 	public VectorStoreDocumentRetriever createVectorStoreDocumentRetriever(double score, String source) {
 		
@@ -90,24 +92,15 @@ public class CompressionQueryTransformerService {
 		
 	}
 		
-	public String chatWithCompression(String question, double score, String source, String conversationId) {
+	public String chatWithRewriteQuery(String question, double score, String source, String conversationId) {
 		
 		RetrievalAugmentationAdvisor retrievalAugmentationAdvisor = RetrievalAugmentationAdvisor.builder()
-																		.queryTransformers(createCompressionQueryTransformer())
+																		.queryTransformers(createRewriteQueryTransformer())
 																		.documentRetriever(createVectorStoreDocumentRetriever(score, source))
-																		.build();	
+																		.build();
 		
 	    // 프롬프트를 LLM으로 전송하고 응답을 받는 코드
-	    String answer = this.chatClient.prompt()
-	    	.system("""
-	                후속 질문을 아래 규칙을 참고하세요.
-	    			
-	                규칙:
-	                - 이전 대화를 참고하세요.
-	                - 사용자가 묻지 않은 내용을 추가하지 마세요.
-	                - 질문의 의미를 확장하지 마세요.
-	                - 길게 답변하지 마세요.
-	                """)
+	    String answer = this.chatClient.prompt()	    	
 	        .user(question)
 	        .advisors(
 	        	MessageChatMemoryAdvisor.builder(chatMemory).build(),
@@ -119,43 +112,6 @@ public class CompressionQueryTransformerService {
 	    
 	    return answer;
 	  }
-	
-	public String chatWithCompression2(
-	        String question,
-	        double score,
-	        String source,
-	        String conversationId) {
-
-	    MessageChatMemoryAdvisor memoryAdvisor =
-	        MessageChatMemoryAdvisor.builder(chatMemory)
-	            .order(Ordered.HIGHEST_PRECEDENCE + 100)
-	            .build();
-
-	    RetrievalAugmentationAdvisor retrievalAdvisor =
-	        RetrievalAugmentationAdvisor.builder()
-	            .queryTransformers(createCompressionQueryTransformer())
-	            .documentRetriever(
-	                createVectorStoreDocumentRetriever(score, source)
-	            )
-	            .order(Ordered.HIGHEST_PRECEDENCE + 200)
-	            .build();
-
-	    return this.chatClient.prompt()
-	        .user(question)
-	        .advisors(advisorSpec -> advisorSpec
-	            .advisors(
-	                memoryAdvisor,
-	                retrievalAdvisor
-	            )
-	            .param(
-	                ChatMemory.CONVERSATION_ID,
-	                conversationId
-	            )
-	        )
-	        .call()
-	        .content();
-	}
-	
 }
 
 
