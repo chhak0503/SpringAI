@@ -43,9 +43,20 @@ public class RagController {
 					     @RequestParam("chunkSize") int chunkSize,
 						 @RequestParam("minChunkSizeChars") int minChunkSizeChars) throws IOException {
 		
-		//String result = service.etlFromFile(title, author, attach);
+		service.ragEtl(attach, source, chunkSize, minChunkSizeChars);
 		
 		return "ETL 작업을 완료 했습니다.";
+	}
+	
+	@ResponseBody
+	@PostMapping("/ai/rag-chat")
+	public String ragChat(@RequestParam("question") String question, 
+					     @RequestParam("score") double score, 
+					     @RequestParam("source") String source) {
+		
+		String answer = service.ragChat(question, score, source);
+		
+		return answer;
 	}
 	
 }
