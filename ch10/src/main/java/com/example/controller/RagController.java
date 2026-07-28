@@ -34,18 +34,18 @@ public class RagController {
 		service.clearVectorStore();		
 		return "벡터 저장소의 데이터를 비웠습니다.";				
 	}
-	
-	
+		
 	
 	@ResponseBody
-	@PostMapping("/ai/rag")
-	public String txtPdfDocxEtl(@RequestParam("title") String title, 
-							  @RequestParam("author") String author, 
-							  @RequestParam("attach") MultipartFile attach) throws IOException{
+	@PostMapping("/ai/rag-etl")
+	public String ragEtl(@RequestParam("attach") MultipartFile attach, 
+					     @RequestParam("source") String source, 
+					     @RequestParam("chunkSize") int chunkSize,
+						 @RequestParam("minChunkSizeChars") int minChunkSizeChars) throws IOException {
 		
 		//String result = service.etlFromFile(title, author, attach);
 		
-		return null;
+		return "ETL 작업을 완료 했습니다.";
 	}
 	
 }
